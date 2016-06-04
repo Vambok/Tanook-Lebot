@@ -1,5 +1,5 @@
 ### Tanook Lebot
-Source code of a twitch chat bot for Tanook Leduc
+Twitch chat bot for Tanook Leduc
 
 ### Changelog:
 ##### 0.1(infdev):
