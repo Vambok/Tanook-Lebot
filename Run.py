@@ -4,11 +4,9 @@ import time
 import threading
 import re
 from urllib.request import urlopen
-from Read import getUser,getMessage
-from Socket import openSocket,sendMessage
-from Initialize import joinRoom
+from Socket import openSocket,sendMessage,joinRoom,getUser,getMessage
 from Settings import CHANNEL,MBALL,COOLDOWNCMD,VERSION
-from pastebin import getChangelog
+#from pastebin import getChangelog
 
 s=openSocket("#"+CHANNEL)
 joinRoom(s)
@@ -229,8 +227,6 @@ while True:
 				standbymode()
 			elif messagelc=="!bordel" and user in MODOS:
 				sendMessage(s,"/slowoff")
-			elif messagelc=="!changelog" and user in MODOS:
-				sendMessage(s,"/w "+user+" The changelog for this bot can be found here: "+getChangelog())
 			elif messagelc=="!uptimes" and user in MODOS:
 				uptimesMessage=""
 				for viewerUt in UPTIMES:
