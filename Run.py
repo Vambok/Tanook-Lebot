@@ -12,16 +12,15 @@ s=openSocket("#"+CHANNEL)
 joinRoom(s)
 #w=openSocket("$[whisper]")
 #joinRoom(w)
-""" INIT
-MODOS=["tanook_leduc","aiki_","faiscla","orso5895","vambok","tanook_lebot"]
-REGULARS=["tanook_leduc","aiki_","faiscla","orso5895","vambok","tanook_lebot","magicdiner","landulyk","imsouseless","hikarichan73","sednegi","aruthekbr","davissyon","plumeblanche","neg_eggs","reidmercury__","massiste2","ptiteframboise71","rhyouk","les_survivants","perblez60"]
-SLAVES=["vambok","landulyk","faiscla","rhyouk","perblez60","piouman"]
-UPTIMES={'tanook_leduc':10,'tanook_lebot':10,'vambok':10}
-MSGCOUNT={'tanook_leduc':10,'tanook_lebot':10,'vambok':10}
-fichier=open("viewers","wb")
-pickle.dump([MODOS,REGULARS,SLAVES,UPTIMES,MSGCOUNT],fichier)
-fichier.close()
-"""
+# INIT
+#MODOS=["tanook_leduc","aiki_","faiscla","orso5895","vambok","tanook_lebot"]
+#REGULARS=["tanook_leduc","aiki_","faiscla","orso5895","vambok","tanook_lebot","magicdiner","landulyk","imsouseless","hikarichan73","sednegi","aruthekbr","davissyon","plumeblanche","neg_eggs","reidmercury__","massiste2","ptiteframboise71","rhyouk","les_survivants","perblez60"]
+#SLAVES=["vambok","landulyk","faiscla","rhyouk","perblez60","piouman"]
+#UPTIMES={'tanook_leduc':10,'tanook_lebot':10,'vambok':10}
+#MSGCOUNT={'tanook_leduc':10,'tanook_lebot':10,'vambok':10}
+#fichier=open("viewers","wb")
+#pickle.dump([MODOS,REGULARS,SLAVES,UPTIMES,MSGCOUNT],fichier)
+#fichier.close()
 fichier=open("viewers","rb")
 gens=pickle.load(fichier)
 fichier.close()
@@ -30,14 +29,13 @@ REGULARS=gens[1]
 SLAVES=gens[2]
 UPTIMES=gens[3]
 MSGCOUNT=gens[4]
-""" LVLS
-LEVELS={}
-for viewer in UPTIMES:
-	if viewer in MSGCOUNT:
-		LEVELS[viewer]=int((UPTIMES[viewer]/40+MSGCOUNT[viewer]/10)**0.5)
-	else:
-		LEVELS[viewer]=int((UPTIMES[viewer]/40)**0.5)
-"""
+# LVLS
+#LEVELS={}
+#for viewer in UPTIMES:
+#	if viewer in MSGCOUNT:
+#		LEVELS[viewer]=int((UPTIMES[viewer]/40+MSGCOUNT[viewer]/10)**0.5)
+#	else:
+#		LEVELS[viewer]=int((UPTIMES[viewer]/40)**0.5)
 def textDelay(msg,delai):
 	time.sleep(delai)
 	for ligne in msg.split("\n"):
@@ -62,17 +60,16 @@ def uptimeUpdate(multiplicateur):
 		for viewer in present:
 			if viewer in UPTIMES:
 				UPTIMES[viewer]+=multiplicateur
-""" LVLS
-				if viewer in MSGCOUNT:
-					nbMsg=MSGCOUNT[viewer]
-				else:
-					nbMsg=0
-				nextLvl=int((UPTIMES[viewer]/40+nbMsg/10)**0.5)
-				if nextLvl > LEVELS[viewer]:
-					LEVELS[viewer]=nextLvl
-					if viewer not in MODOS:
-						sendMessage(s,"Et "+viewer+" atteint le niveau "+str(nextLvl)+" de chien de la casse-ance ! Bravo :)")
-"""
+# LVLS
+#				if viewer in MSGCOUNT:
+#					nbMsg=MSGCOUNT[viewer]
+#				else:
+#					nbMsg=0
+#				nextLvl=int((UPTIMES[viewer]/40+nbMsg/10)**0.5)
+#				if nextLvl > LEVELS[viewer]:
+#					LEVELS[viewer]=nextLvl
+#					if viewer not in MODOS:
+#						sendMessage(s,"Et "+viewer+" atteint le niveau "+str(nextLvl)+" de chien de la casse-ance ! Bravo :)")
 			else:
 				UPTIMES[viewer]=multiplicateur
 		fichier=open("viewers","wb")
@@ -176,7 +173,7 @@ while True:
 			elif messagelc=="!discord":
 				sendMessage(s,"L'adresse de notre serveur Discord communautaire : discord.gg/0tsKaAs4vaCMwU0y ! Si tu veux venir papoter avec nous !")
 #			elif messagelc=="!multitwitch" or messagelc=="!mt" or messagelc=="!multi-twitch":
-#				sendMessage(s,"Voici le lien du multi-twitch où vous pouvez suivre la race de MagicDiner en parallèle : www.multitwitch.tv/tanook_leduc/magicdiner")
+#				sendMessage(s,"Voici le lien du multi-twitch où vous pouvez suivre la race de MagicDiner en parallèle : multitwitch.tv/tboi_tournament_fr/tanook_leduc")
 			elif messagelc=="!planning":
 				sendMessage(s,"Tu peux retrouver le planning de la chaîne ici : t.co/GaF8wOJxnv !")
 			elif messagelc=="!pb" or messagelc=="!pbs":
@@ -191,6 +188,8 @@ while True:
 #				sendMessage(s,"Pour suivre Tanook sur Google+ c'est ici : goo.gl/KL6Ixj !")
 			elif messagelc=="!facebook" or messagelc=="!fb":
 				sendMessage(s,"Check this out! www.facebook.com/patricksebastienofficiel Kappa")
+			elif messagelc=="!spotify":
+				sendMessage(s,"La playlist epic-of-doom que Tanook utilise pour accompagner ses speedruns : goo.gl/kn55sr")
 			elif messagelc=="!twitch":
 				sendMessage(s,"Pour voir Tanook en live sur Twitch... wait, that's not funny ! FailFish")
 			elif messagelc=="!myuptime" or messagelc=="!uptime" or messagelc=="!ut":
@@ -222,9 +221,8 @@ while True:
 #				sendMessage(s," ")
 #			elif messagelc=="!vambok":
 #				sendMessage(s," ")
-			elif (messagelc=="!standby" or messagelc=="!sleep") and (user=="vambok" or user==CHANNEL):
-				sendMessage(s,"Sleep mode activated. Memory dump: \"Bonne nuit les amis !\"")
-				standbymode()
+			elif messagelc=="!splits" and user in MODOS:
+				sendMessage(s,"11:56 - 33:25 - 49:44 - 1:02:40 - 1:16:49 - 1:37:51 - 1:49:56")
 			elif messagelc=="!bordel" and user in MODOS:
 				sendMessage(s,"/slowoff")
 			elif messagelc=="!uptimes" and user in MODOS:
@@ -232,6 +230,15 @@ while True:
 				for viewerUt in UPTIMES:
 					uptimesMessage+=viewerUt+":"+str(UPTIMES[viewerUt])+", "
 				sendMessage(s,uptimesMessage[:-2])
+			elif (messagelc=="!standby" or messagelc=="!sleep") and (user=="vambok" or user==CHANNEL):
+				print("Sleep mode activated. Memory dump: \"Bonne nuit les amis !\"")
+				standbymode()
+			elif messagelc=="!alliance" and (user=="vambok" or user==CHANNEL):
+				sendMessage(s,"/alliance")
+				sendMessage(s,"Pour Lordaeron !")
+			elif messagelc=="!horde" and (user=="vambok" or user==CHANNEL):
+				sendMessage(s,"/horde")
+				sendMessage(s,"Pour la Horde !")
 			elif messagelc=="*ouais*":
 				if ouaisCpt > 1:
 					sendMessage(s,"*ouais*")
@@ -241,7 +248,7 @@ while True:
 			elif messagelc=="!roulette":
 				tirage=int((actualtime % 1)*12)
 				if user=="orso5895":
-					sendMessage(s,"/me voit Orso pointer son gros Remington sur lui. \"Ne me teste pas tas de ferraille !\" WutFace")			
+					sendMessage(s,"/me voit Orso pointer son gros Remington sur lui. \"Ne me teste pas tas de ferraille !\" WutFace")
 				elif user in MODOS:
 					sendMessage(s,"/me n'oserait pas pointer une arme à feu sur "+user+".")
 				elif user in REGULARS:
@@ -257,7 +264,7 @@ while True:
 				else:
 					sendMessage(s,"/me place le Remington d'Orso sur la tempe de "+user+".")
 					if tirage==0:
-						roulette="/timeout "+user+" 10\nBOOM ! "+user+" est retrouvé étendu sur le sol"
+						roulette="/timeout "+user+" 10\nBOOM ! Et on ramasse "+user+" à la Gustavo"
 					elif tirage==1:
 						roulette="La détente est pressée mais du sang séché encrasse le Remington. "+user+" survit miraculeusement !"
 					else:
@@ -303,25 +310,24 @@ while True:
 				textDelay("/timeout "+user+" 1",0.5)
 				sendMessage(s,"@"+user+" J'ai rien compris Kappa")
 				continue
-""" greetings
-			if user[:13]!="tmi.twitch.tv" and user!=CHANNEL and user!="vambok":
-				if user not in SEEN:
-					if user in MODOS:
-						sendMessage(s,"@"+user+" Hey collègue ! o/")
-					elif user in REGULARS:
-						sendMessage(s,"Salut "+user+" :D")
-					else:
-						sendMessage(s,"Bonjour "+user+" !")
-				else:
-					if actualtime-SEEN[user] > 7200:
-						if user in MODOS:
-							sendMessage(s,"@"+user+" re :)")
-						elif user in REGULARS:
-							sendMessage(s,"Wb "+user+" ^^")
-						else:
-							sendMessage(s,"Re "+user+" !")
-				SEEN[user]=actualtime
-"""
+# greetings
+#			if user[:13]!="tmi.twitch.tv" and user!=CHANNEL and user!="vambok":
+#				if user not in SEEN:
+#					if user in MODOS:
+#						sendMessage(s,"@"+user+" Hey collègue ! o/")
+#					elif user in REGULARS:
+#						sendMessage(s,"Salut "+user+" :D")
+#					else:
+#						sendMessage(s,"Bonjour "+user+" !")
+#				else:
+#					if actualtime-SEEN[user] > 7200:
+#						if user in MODOS:
+#							sendMessage(s,"@"+user+" re :)")
+#						elif user in REGULARS:
+#							sendMessage(s,"Wb "+user+" ^^")
+#						else:
+#							sendMessage(s,"Re "+user+" !")
+#				SEEN[user]=actualtime
 			commande=message.split(" ",1)
 			if len(commande)<2:
 				commande.append("")
@@ -333,15 +339,15 @@ while True:
 				elif commande[0]=="!8ball" and commande[1]!="":
 					tirage=int((actualtime % 1)*len(MBALL))
 					sendMessage(s,MBALL[tirage])
-				elif commande[0]=="!love":
-					if commande[1][0]=="@":
+				elif commande[0]=="!love" and commande[1]!="":
+					if commande[1][0]=="@" and commande[1]!="@":
 						paramLove=commande[1][1:].lower()
 					else:
 						paramLove=commande[1].lower()
 					if paramLove=="tanook_lebot":
 						sendMessage(s,"Stupide humain, les robots ne connaissent pas l'amour ! BibleThump")
 					elif paramLove==CHANNEL:
-						sendMessage(s,"Il y a [IntegerOverflowError(CWE-190)]% d'amour entre "+user+" et Tanook Leduc !")
+						sendMessage(s,"Il y a [IntegerOverflowError]% d'amour entre "+user+" et Tanook Leduc !")
 					else:
 						if paramLove in MODOS or paramLove=="aiki" or paramLove=="orso":
 							loveOffset=50

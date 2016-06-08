@@ -1,4 +1,4 @@
-VERSION="1.8"
+VERSION="1.8.1"
 HOST="irc.twitch.tv"
 PORT=6667
 PASS="oauth:vpjvbm9kpvglh1i3j16d73qrwaaen5"
