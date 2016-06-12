@@ -82,4 +82,8 @@ Changed server string request to "str.format(elmnt).encode("utf-8")" to match Py
 -pastebin.py**
 
 ##### 1.8.1 (warcraft patch):
->**Run.py:** +!spotify / *+!alliance +!horde +!splits*
+>**Run.py:** +!spotify ; +!rod / *+!alliance +!horde +!splits*
+
+##### 1.8.2 (vip patch):
+>**Run.py:** moderation now spare the vip from the UNMOD list / *+!ar, +!rr, removed text messages to add and remove regular ; +auto-exit from standbymode at launch*
+**Settings.py:** +UNMOD (list of unmoderated vip)

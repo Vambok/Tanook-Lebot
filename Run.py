@@ -5,7 +5,7 @@ import threading
 import re
 from urllib.request import urlopen
 from Socket import openSocket,sendMessage,joinRoom,getUser,getMessage
-from Settings import CHANNEL,MBALL,COOLDOWNCMD,VERSION
+from Settings import CHANNEL,MBALL,COOLDOWNCMD,VERSION,UNMOD
 #from pastebin import getChangelog
 
 s=openSocket("#"+CHANNEL)
@@ -76,7 +76,7 @@ def uptimeUpdate(multiplicateur):
 		pickle.dump([MODOS,REGULARS,SLAVES,UPTIMES,MSGCOUNT],fichier)
 		fichier.close()
 		print("Uptimes and msgs updated")
-def standbymode():
+def standbymode(starting=False):
 	global EMOTELIST
 	global ouaisCpt
 	global ggCpt
@@ -90,7 +90,7 @@ def standbymode():
 		readbuffer=temp.pop()
 		for line in temp:
 			user=getUser(line)
-			if user==CHANNEL or user=="vambok":
+			if user==CHANNEL or user=="vambok" or starting:
 				actualtime=time.time()
 				EMOTELIST=[":)",":(",":D",">(",":|","O_o","B)",":O","<3",":/",";)",":P",";P","R)"]
 				data=urlopen("https://twitchemotes.com/api_cache/v2/global.json").read(40000).decode("utf-8")
@@ -131,7 +131,7 @@ ouaisCpt=0
 ggCpt=0
 lastUptimeUpdate=time.time()
 lastCommande=0
-standbymode()
+standbymode(True)
 while True:
 	readbuffer+=s.recv(1024).decode('utf-8')
 	temp=readbuffer.split("\n")
@@ -192,6 +192,8 @@ while True:
 				sendMessage(s,"La playlist epic-of-doom que Tanook utilise pour accompagner ses speedruns : goo.gl/kn55sr")
 			elif messagelc=="!twitch":
 				sendMessage(s,"Pour voir Tanook en live sur Twitch... wait, that's not funny ! FailFish")
+			elif messagelc=="!rod":
+				sendMessage(s,"Pour toutes les informations concernant le Relay Of Destiny : deejumbles.com/rod")
 			elif messagelc=="!myuptime" or messagelc=="!uptime" or messagelc=="!ut":
 				if user in UPTIMES:
 					sendMessage(s,user+" a été présent "+str(int(UPTIMES[user]/6)/10)+" heures sur le live ! (depuis le 21/5)")
@@ -276,7 +278,7 @@ while True:
 			else:
 				noCommande=True
 		if noCommande: # symbols spam
-			if user not in MODOS and ((re.search(":\/\/[a-zA-Z1-9]{2,}\.[a-zA-Z1-9]{2,}",message) is not None) or (re.search("[a-zA-Z1-9]{2,}\.[a-zA-Z1-9]{3,}\.[a-zA-Z1-9]{2,}",message) is not None) or (re.search("[a-zA-Z1-9]{2,}\.[a-zA-Z1-9]{2,}\/[a-zA-Z1-9]+",message) is not None) or (re.search("[a-zA-Z1-9]{3,}@[a-zA-Z1-9]{3,}\.[a-zA-Z1-9]{2,}",message) is not None)):
+			if user not in (MODOS+UNMOD) and ((re.search(":\/\/[a-zA-Z1-9]{2,}\.[a-zA-Z1-9]{2,}",message) is not None) or (re.search("[a-zA-Z1-9]{2,}\.[a-zA-Z1-9]{3,}\.[a-zA-Z1-9]{2,}",message) is not None) or (re.search("[a-zA-Z1-9]{2,}\.[a-zA-Z1-9]{2,}\/[a-zA-Z1-9]+",message) is not None) or (re.search("[a-zA-Z1-9]{3,}@[a-zA-Z1-9]{3,}\.[a-zA-Z1-9]{2,}",message) is not None)):
 				if user not in PERMITTED:
 					textDelay("/timeout "+user+" 1",0.5)
 #					sendMessage(s,"/timeout "+user+" 1")
@@ -296,17 +298,17 @@ while True:
 				if emote in message:
 					emoteSpam+=message.count(emote)
 					messageSansEmotes=messageSansEmotes.replace(emote,"")
-			if user not in MODOS and emoteSpam > 3:
+			if user not in (MODOS+UNMOD) and emoteSpam > 3:
 				textDelay("/timeout "+user+" 1",0.5)
 #				sendMessage(s,"/timeout "+user+" 1")
 				sendMessage(s,"Du calme avec les émotes, tu t'es cru sur MSN ? SwiftRage")
 				continue
-			if (user not in MODOS) and (re.search("([A-Z]{2,}.*){3}",messageSansEmotes) is not None) and ((len(messageSansEmotes) > 20 and user not in REGULARS) or len(messageSansEmotes) > 30) and (messageSansEmotes==messageSansEmotes.upper()):
+			if (user not in (MODOS+UNMOD)) and (re.search("([A-Z]{2,}.*){3}",messageSansEmotes) is not None) and ((len(messageSansEmotes) > 20 and user not in REGULARS) or len(messageSansEmotes) > 30) and (messageSansEmotes==messageSansEmotes.upper()):
 				textDelay("/timeout "+user+" 1",0.5)
 #				sendMessage(s,"/timeout "+user+" 1")
 				sendMessage(s,user+" ARRETE DE CRIER ! SwiftRage")
 				continue
-			if (user not in MODOS) and (re.search("[a-zA-Z]{2}",messageSansEmotes) is None) and (len(messageSansEmotes) > 10):
+			if (user not in (MODOS+UNMOD)) and (re.search("[a-zA-Z]{2}",messageSansEmotes) is None) and (len(messageSansEmotes) > 10):
 				textDelay("/timeout "+user+" 1",0.5)
 				sendMessage(s,"@"+user+" J'ai rien compris Kappa")
 				continue
@@ -419,26 +421,30 @@ while True:
 						else:
 							sendMessage(s,commande[1]+" était à bord clandestinement apparemment...")
 				elif user in MODOS:
-					if commande[0]=="!addregular":
+					if commande[0]=="!addregular" or commande[0]=="!ar":
 						commande[1]=commande[1].lower()
 						if commande[1] in REGULARS:
-							sendMessage(s,"Mais je connais déjà "+commande[1]+" ! o/ "+commande[1])
+#							sendMessage(s,"Mais je connais déjà "+commande[1]+" ! o/ "+commande[1])
+							print("Mais je connais déjà "+commande[1]+" !")
 						else:
 							REGULARS.append(commande[1])
 							fichier=open("viewers","wb")
 							pickle.dump([MODOS,REGULARS,SLAVES,UPTIMES,MSGCOUNT],fichier)
 							fichier.close()
-							sendMessage(s,"@"+commande[1]+" Chouette un nouvel ami pour moi ! :D")
-					elif commande[0]=="!removeregular":
+#							sendMessage(s,"@"+commande[1]+" Chouette un nouvel ami pour moi ! :D")
+							print("Chouette un nouvel ami pour moi ! :D "+commande[1])
+					elif commande[0]=="!removeregular" or commande[0]=="!rr":
 						commande[1]=commande[1].lower()
 						if commande[1] in REGULARS:
 							REGULARS.remove(commande[1])
 							fichier=open("viewers","wb")
 							pickle.dump([MODOS,REGULARS,SLAVES,UPTIMES,MSGCOUNT],fichier)
 							fichier.close()
-							sendMessage(s,"@"+commande[1]+" Tu m'as déçu :|")
+#							sendMessage(s,"@"+commande[1]+" Tu m'as déçu :|")
+							print(commande[1]+" m'a déçu :|")
 						else:
-							sendMessage(s,"C ki "+commande[1]+" ? o_O")
+#							sendMessage(s,"C ki "+commande[1]+" ? o_O")
+							print("C ki "+commande[1]+" ? o_O")
 					elif commande[0]=="!permit":
 						commande[1]=commande[1].lower()
 						if commande[1] in MODOS:
